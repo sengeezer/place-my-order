@@ -1,24 +1,58 @@
 import can from 'can';
 import superMap from 'can-connect/can/super-map/';
 import tag from 'can-connect/can/tag/';
+import List from 'can/list/';
+import Map from 'can/map/';
 import 'can/map/define/define';
 
-export const Order = can.Map.extend({
-  define: {}
+const ItemsList = List.extend({}, {
+  has: function(item) {
+    return this.indexOf(item) !== -1;
+  },
+
+  toggle: function(item) {
+    var index = this.indexOf(item);
+
+    if (index !== -1) {
+      this.splice(index, 1);
+    } else {
+      this.push(item);
+    }
+  }
 });
 
-Order.List = can.List.extend({
-  Map: Order
-}, {});
+let Order = Map.extend({
+  define: {
+    status: {
+      value: 'new'
+    },
+    items: {
+      Value: ItemsList
+    },
+    total: {
+      get() {
+        let total = 0.0;
+        this.attr('items').forEach(item =>
+            total += parseFloat(item.attr('price')));
+        return total.toFixed(2);
+      }
+    }
+  },
 
-export const orderConnection = superMap({
+  markAs(status) {
+    this.attr('status', status);
+    this.save();
+  }
+});
+
+export const connection = superMap({
   url: '/api/orders',
   idProp: '_id',
   Map: Order,
   List: Order.List,
-  name: 'order'
+  name: 'orders'
 });
 
-tag('order-model', orderConnection);
+tag('order-model', connection);
 
 export default Order;
