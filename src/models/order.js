@@ -4,6 +4,7 @@ import tag from 'can-connect/can/tag/';
 import List from 'can/list/';
 import Map from 'can/map/';
 import 'can/map/define/define';
+import io from 'steal-socket.io';
 
 const ItemsList = List.extend({}, {
   has: function(item) {
@@ -52,6 +53,12 @@ export const connection = superMap({
   List: Order.List,
   name: 'orders'
 });
+
+const socket = io();
+
+socket.on('orders created', order => connection.createInstance(order));
+socket.on('orders updated', order => connection.updateInstance(order));
+socket.on('orders removed', order => connection.destroyInstance(order));
 
 tag('order-model', connection);
 
