@@ -14,7 +14,8 @@ var cordovaOptions = {
   plugins: ["cordova-plugin-transport-security"],
   index: __dirname + "/production.html",
   glob: [
-    "node_modules/steal/steal.production.js"
+    "node_modules/steal/steal.production.js",
+    "node_modules/place-my-order-assets/images/**/*"
   ]
 };
 
