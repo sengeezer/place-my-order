@@ -13,7 +13,7 @@ City.List = can.List.extend({
 }, {});
 
 export const cityConnection = superMap({
-  url: baseUrl + '/api/states',
+  url: baseUrl + '/api/cities',
   idProp: 'name',
   Map: City,
   List: City.List,
